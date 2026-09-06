@@ -16,7 +16,7 @@ from frappe.model.mapper import get_mapped_doc
 from frappe.model.naming import set_name_by_naming_series, set_name_from_naming_options
 from frappe.model.utils.rename_doc import update_linked_doctypes
 from frappe.query_builder import Field, functions
-from frappe.utils import cint, cstr, flt, fmt_money, get_formatted_email, get_link_to_form, getdate, today
+from frappe.utils import cint, cstr, flt, fmt_money, get_formatted_email, getdate, today
 from frappe.utils.user import get_users_with_role
 
 from erpnext.accounts.party import (
@@ -38,18 +38,13 @@ class Customer(TransactionBase):
 	from typing import TYPE_CHECKING
 
 	if TYPE_CHECKING:
-		from frappe.types import DF
-
-		from erpnext.accounts.doctype.allowed_to_transact_with.allowed_to_transact_with import (
-			AllowedToTransactWith,
-		)
+		from erpnext.accounts.doctype.allowed_to_transact_with.allowed_to_transact_with import AllowedToTransactWith
 		from erpnext.accounts.doctype.party_account.party_account import PartyAccount
 		from erpnext.selling.doctype.customer_credit_limit.customer_credit_limit import CustomerCreditLimit
 		from erpnext.selling.doctype.sales_team.sales_team import SalesTeam
-		from erpnext.selling.doctype.supplier_number_at_customer.supplier_number_at_customer import (
-			SupplierNumberAtCustomer,
-		)
+		from erpnext.selling.doctype.supplier_number_at_customer.supplier_number_at_customer import SupplierNumberAtCustomer
 		from erpnext.utilities.doctype.portal_user.portal_user import PortalUser
+		from frappe.types import DF
 
 		account_manager: DF.Link | None
 		accounts: DF.Table[PartyAccount]
@@ -62,7 +57,7 @@ class Customer(TransactionBase):
 		customer_pos_id: DF.Data | None
 		customer_primary_address: DF.Link | None
 		customer_primary_contact: DF.Link | None
-		customer_type: DF.Literal["Company", "Individual", "Partnership"]
+		customer_type: DF.Literal["Individual", "Partnership", "Company"]
 		default_bank_account: DF.Link | None
 		default_commission_rate: DF.Float
 		default_currency: DF.Link | None
@@ -83,7 +78,7 @@ class Customer(TransactionBase):
 		loyalty_program: DF.Link | None
 		loyalty_program_tier: DF.Data | None
 		market_segment: DF.Link | None
-		mobile_no: DF.ReadOnly | None
+		mobile_no: DF.ReadOnly
 		naming_series: DF.Literal["CUST-.YYYY.-"]
 		opportunity_name: DF.Link | None
 		payment_terms: DF.Link | None
@@ -261,15 +256,10 @@ class Customer(TransactionBase):
 		)
 
 		if internal_customer:
-			internal_customer_link = get_link_to_form("Customer", internal_customer)
 			frappe.throw(
-				_(
-					"Internal Customer {0} already exists for {1}. Disable it to make this Customer internal."
-				).format(
-					internal_customer_link,
-					frappe.bold(self.represents_company),
-				),
-				title=_("Internal Customer Already Exists"),
+				_("Internal Customer for company {0} already exists").format(
+					frappe.bold(self.represents_company)
+				)
 			)
 
 	def on_update(self):
