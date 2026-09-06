@@ -141,14 +141,14 @@
    "options": "Gender"
   },
   {
-   "default": "Company",
+   "default": "Individual",
    "fieldname": "customer_type",
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Customer Type",
    "oldfieldname": "customer_type",
    "oldfieldtype": "Select",
-   "options": "Company\nIndividual\nPartnership",
+   "options": "Individual\nPartnership\nCompany",
    "reqd": 1
   },
   {
@@ -411,7 +411,7 @@
   },
   {
    "default": "0",
-   "description": "Blocks new transactions and further accounting entries on this customer's account. Only users with the role set in Company's \"Roles Allowed to Set and Edit Frozen Account Entries\" can transact.",
+   "description": "Blocks all further accounting entries on this customer's account. Only users with the frozen-entries role can override.\n",
    "fieldname": "is_frozen",
    "fieldtype": "Check",
    "label": "Is Frozen",
@@ -696,7 +696,7 @@
    "link_fieldname": "party"
   }
  ],
- "modified": "2026-08-14 16:10:58.600553",
+ "modified": "2026-08-31 12:16:50.149915",
  "modified_by": "Administrator",
  "module": "Selling",
  "name": "Customer",
